@@ -1,9 +1,10 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.produto;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import br.edu.ifpr.bsi.projetoexemplo.model.pedido.Pedido;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_produtos")
@@ -17,4 +18,7 @@ public class Produto extends GenericModel {
 
     @Column(name = "preco_produto")
     private Double preco;
+
+    @ManyToMany(mappedBy = "produtos")
+    private List<Pedido> pedidos;
 }

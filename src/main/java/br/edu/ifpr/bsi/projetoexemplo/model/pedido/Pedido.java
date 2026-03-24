@@ -20,7 +20,7 @@ public class Pedido extends GenericModel {
     // Anotação para indicar que o campo deve ser preenchido automaticamente com a data de criação do registro
     @CreatedDate
     @Column(name = "data_pedido")
-    private LocalDateTime dataPedido;
+    private LocalDateTime data;
 
     @Column(name = "descricao_pedido")
     private String descricao;
@@ -35,6 +35,6 @@ public class Pedido extends GenericModel {
             joinColumns = @JoinColumn(name = "pedido_id"), // FK desta entidade (Pedido)
             inverseJoinColumns = @JoinColumn(name = "produto_id") // FK da entidade relacionada (Produto)
     )
-    private List<Produto> produtosPedido;
+    private List<Produto> produtos;
 
 }
