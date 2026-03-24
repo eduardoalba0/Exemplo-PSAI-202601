@@ -19,6 +19,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    // READ - Listar todos os clientes (GET)
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = this.clienteService.listar();
@@ -32,13 +33,7 @@ public class ClienteController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Atualização permitida somente através do método PUT.");
         }
         Cliente clienteSalvo = clienteService.salvar(request);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(clienteSalvo.getCodigo())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(clienteSalvo);
+        return ResponseEntity.ok(clienteSalvo);
     }
 
 
