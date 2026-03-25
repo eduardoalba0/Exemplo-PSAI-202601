@@ -19,7 +19,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<Cliente> findByCpf(String cpf);
 
     // Usando JPQL para buscar clientes cujo nome contenha uma string
-    @Query(value="SELECT c FROM Cliente c WHERE c.nome LIKE %:nome%")
+    @Query(value="SELECT c FROM Cliente c WHERE UPPER(c.nome) LIKE UPPER(CONCAT('%',:nome, '%'))")
     List<Cliente> getAllByNomeLike(@Param("nome") String nome);
 
     // Usando SQL nativo para buscar clientes cujo nome contenha uma string e com limite de resultados

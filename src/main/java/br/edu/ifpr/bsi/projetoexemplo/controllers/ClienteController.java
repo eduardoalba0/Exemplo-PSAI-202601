@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,6 +16,13 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    // CREATE - Criar um novo cliente (POST)
+    @PostMapping
+    public ResponseEntity<Cliente> criar(@RequestBody Cliente request) {
+        Cliente clienteSalvo = clienteService.salvar(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
+    }
+
     // READ - Listar todos os clientes (GET)
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
@@ -26,15 +30,34 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
 
-    // CREATE - Criar um novo cliente (POST)
-    @PostMapping
-    public ResponseEntity<Cliente> criar(@RequestBody Cliente request) {
-        if (request.getCodigo() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Atualização permitida somente através do método PUT.");
-        }
-        Cliente clienteSalvo = clienteService.salvar(request);
-        return ResponseEntity.ok(clienteSalvo);
+    // READ - Listar todos os clientes filtrando-os pelo nome (GET)
+    // Não é recomendado criar um endpoint específico para cada tipo de filtro, o ideal é criar um endpoint genérico de listagem e usar parâmetros de consulta (query parameters) para aplicar os filtros desejados. Assim, o mesmo endpoint pode ser usado para listar todos os clientes ou para listar clientes filtrados por nome, por exemplo.
+    @GetMapping("/listar-nome")
+    public ResponseEntity<List<Cliente>> listarClientesPorNome(
+            @RequestParam String nome) {
+        List<Cliente> clientes = this.clienteService.listarPorNome(nome);
+        return ResponseEntity.ok(clientes);
     }
 
+    // READ - Obter um cliente pelo Codigo (GET)
+    @GetMapping("/{codigo}")
+    public ResponseEntity<Cliente> obterPorCodigo(@PathVariable Long codigo) {
+        Cliente cliente = this.clienteService.obterPorId(codigo);
+        return ResponseEntity.ok(cliente);
+    }
+
+    // UPDATE - Atualizar um cliente existente pelo Codigo (PUT - atualização completa)
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Cliente> atualizar(@PathVariable Long codigo, @RequestBody Cliente request) {
+        Cliente clienteAtualizado = clienteService.salvar(codigo, request);
+        return ResponseEntity.ok(clienteAtualizado);
+    }
+
+    // DELETE - Excluir um cliente pelo Codigo (DELETE)
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long codigo) {
+        clienteService.excluir(codigo);
+    }
 
 }
