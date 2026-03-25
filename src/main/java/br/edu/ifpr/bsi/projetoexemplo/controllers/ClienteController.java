@@ -1,6 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.controllers;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,10 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    // ==========================================================
+    // ENDPOINTS DE CLIENTE
+    // ==========================================================
 
     // CREATE - Criar um novo cliente (POST)
     @PostMapping
@@ -60,4 +65,18 @@ public class ClienteController {
         clienteService.excluir(codigo);
     }
 
+    // ==========================================================
+    // ENDPOINTS DO CONTATO DO CLIENTE
+    // ==========================================================
+
+    // CREATE - Criar um novo contato para um cliente específico (POST)
+    @PostMapping("/{codigoCliente}/contatos")
+    public ResponseEntity<Cliente> adicionarContato(@PathVariable Long codigoCliente, @RequestBody Contato request) {
+        Cliente cliente = clienteService.adicionarContato(codigoCliente, request);
+        return ResponseEntity.ok(cliente);
+    }
+
+    /**
+     * TODO - Implementar restante dos endpoints de contato, se necessário.
+     */
 }

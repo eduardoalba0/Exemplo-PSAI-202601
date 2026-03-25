@@ -1,6 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,11 +51,19 @@ public class ClienteService {
         return this.clienteRepository.save(cliente);
     }
 
-
-
     @Transactional
     public void excluir(Long clienteId) {
         this.clienteRepository.deleteById(clienteId);
+    }
+
+    @Transactional
+    public Cliente adicionarContato(Long codigoCliente, Contato contato) {
+        Cliente clienteEncontrado = this.clienteRepository.findById(codigoCliente).orElse(null);
+        if (clienteEncontrado == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+        }
+        clienteEncontrado.adicionarContato(contato);
+        return this.clienteRepository.save(clienteEncontrado);
     }
 
 }

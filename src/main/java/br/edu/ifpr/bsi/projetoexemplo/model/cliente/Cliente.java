@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,10 +40,19 @@ public class Cliente extends GenericModel {
     // FetchType.LAZY indica que os contatos devem ser carregados somente quando forem acessados, o que pode melhorar o desempenho se o endereço não for sempre necessário
     // OrphanRemoval = true garante que, se um contato for removido da lista de contatos do cliente, ele também será removido do banco de dados
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY,  orphanRemoval = true)
-    private List<Contato> contatos;
+    private List<Contato> contatos = new ArrayList<>();
 
     // Um cliente pode ter vários pedidos
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos;
 
+    public void adicionarContato(Contato contato) {
+        contato.setCliente(this);
+        this.contatos.add(contato);
+    }
+
+    public void removerContato(Contato contato) {
+        contato.setCliente(null);
+        this.contatos.remove(contato);
+    }
 }
