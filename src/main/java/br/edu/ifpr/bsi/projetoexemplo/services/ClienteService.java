@@ -19,7 +19,7 @@ public class ClienteService {
 
     @Transactional
     public Cliente salvar(Cliente cliente) {
-        if (cliente.getContatos()!= null && !cliente.getContatos().isEmpty()){
+        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
             cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
         }
         return this.clienteRepository.save(cliente);
@@ -42,26 +42,24 @@ public class ClienteService {
     }
 
     @Transactional
-    public Cliente salvar(Long codigo, Cliente cliente) {
-        Cliente clienteEncontrado = this.clienteRepository.findById(codigo).orElse(null);
-        if (clienteEncontrado == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-        }
+    public Cliente atualizar(Long codigo, Cliente cliente) {
+        this.clienteRepository.findById(codigo).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         cliente.setCodigo(codigo);
         return this.clienteRepository.save(cliente);
     }
 
     @Transactional
-    public void excluir(Long clienteId) {
-        this.clienteRepository.deleteById(clienteId);
+    public void excluir(Long codigo) {
+        this.clienteRepository.findById(codigo).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        this.clienteRepository.deleteById(codigo);
     }
 
     @Transactional
     public Cliente adicionarContato(Long codigoCliente, Contato contato) {
-        Cliente clienteEncontrado = this.clienteRepository.findById(codigoCliente).orElse(null);
-        if (clienteEncontrado == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-        }
+        Cliente clienteEncontrado = this.clienteRepository.findById(codigoCliente).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         clienteEncontrado.adicionarContato(contato);
         return this.clienteRepository.save(clienteEncontrado);
     }
