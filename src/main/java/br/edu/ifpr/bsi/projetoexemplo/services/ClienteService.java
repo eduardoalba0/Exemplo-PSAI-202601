@@ -46,6 +46,9 @@ public class ClienteService {
         this.clienteRepository.findById(codigo).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         cliente.setCodigo(codigo);
+        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
+            cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
+        }
         return this.clienteRepository.save(cliente);
     }
 
