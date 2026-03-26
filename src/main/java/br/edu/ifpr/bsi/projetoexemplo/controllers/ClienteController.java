@@ -54,7 +54,7 @@ public class ClienteController {
     // UPDATE - Atualizar um cliente existente pelo Codigo (PUT - atualização completa)
     @PutMapping("/{codigo}")
     public ResponseEntity<Cliente> atualizar(@PathVariable Long codigo, @RequestBody Cliente request) {
-        Cliente clienteAtualizado = clienteService.salvar(codigo, request);
+        Cliente clienteAtualizado = clienteService.atualizar(codigo, request);
         return ResponseEntity.ok(clienteAtualizado);
     }
 
