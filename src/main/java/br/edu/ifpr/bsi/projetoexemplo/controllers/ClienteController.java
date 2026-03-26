@@ -37,6 +37,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteAtualizado);
     }
 
+    // DELETE - Excluir um cliente pelo Codigo (DELETE)
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long codigo){
