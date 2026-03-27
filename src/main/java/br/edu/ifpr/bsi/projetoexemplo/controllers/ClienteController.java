@@ -1,6 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.controllers;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,16 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long codigo){
         clienteService.excluir(codigo);
+    }
+
+    // ------------------------------------------------
+    // ENDPOINTS DO CONTATO
+    // ------------------------------------------------
+    @PostMapping("/{codigo}/contatos")
+    public ResponseEntity<Cliente> adicionarContato(@PathVariable Long codigo,
+                                                    @RequestBody Contato contato){
+        Cliente cliente = clienteService.adicionarContato(codigo, contato);
+        return ResponseEntity.ok(cliente);
     }
 
 }

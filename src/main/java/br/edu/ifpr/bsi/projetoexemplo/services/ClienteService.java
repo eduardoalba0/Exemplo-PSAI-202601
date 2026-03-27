@@ -1,6 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class ClienteService {
     }
 
     public Cliente salvar(Cliente cliente) {
+        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
+            cliente.getContatos().forEach(contato-> contato.setCliente(cliente));
+        }
         return this.clienteRepository.save(cliente);
     }
 
@@ -29,8 +33,11 @@ public class ClienteService {
                     .orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.NOT_FOUND,
                                     "Cliente não encontrado"));
-            cliente.setCodigo(codigo);
-            return this.clienteRepository.save(cliente);
+        cliente.setCodigo(codigo);
+        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
+            cliente.getContatos().forEach(contato-> contato.setCliente(cliente));
+        }
+        return this.clienteRepository.save(cliente);
    }
 
    @Transactional
@@ -41,4 +48,17 @@ public class ClienteService {
                                 "Cliente não encontrado"));
         this.clienteRepository.deleteById(codigo);
    }
+
+    // ------------------------------------------------
+    // LÓGICA DE NEGÓCIO PARA O CONTATO
+    // ------------------------------------------------
+    @Transactional
+    public Cliente adicionarContato(Long codigoCliente, Contato contato){
+        Cliente cliente = this.clienteRepository.findById(codigoCliente)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Cliente não encontrado"));
+        cliente.adicionarContato(contato);
+        return this.clienteRepository.save(cliente);
+    }
 }
