@@ -30,7 +30,7 @@ public class Cliente extends GenericModel {
     // CascadeType.ALL faz com que as operações em Cliente sejam propagadas para Endereco
     // FetchType.EAGER indica que o endereço deve ser carregado imediatamente junto com o cliente
     // CUIDADO com o EAGER em relacionamentos @OneToMany, pois pode causar problemas de desempenho se houver muitos contatos para um cliente
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
@@ -46,14 +46,13 @@ public class Cliente extends GenericModel {
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos;
 
-    public void adicionarContato(Contato contato){
+    public void adicionarContato(Contato contato) {
         contato.setCliente(this);
         this.contatos.add(contato);
     }
 
-    public void removerContato(Contato contato){
+    public void removerContato(Contato contato) {
         contato.setCliente(null);
         this.contatos.remove(contato);
     }
-
 }

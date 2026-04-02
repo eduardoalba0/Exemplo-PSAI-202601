@@ -17,55 +17,54 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Transactional
+    public Cliente salvar(Cliente cliente) {
+        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
+            cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
+        }
+        return this.clienteRepository.save(cliente);
+    }
+
     public List<Cliente> listar() {
         return this.clienteRepository.findAll();
     }
 
-    public Cliente salvar(Cliente cliente) {
-        if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
-            cliente.getContatos().forEach(contato-> contato.setCliente(cliente));
+    public List<Cliente> listarPorNome(String nome) {
+        return this.clienteRepository.getAllByNomeLike(nome);
+    }
+
+    public Cliente obterPorId(Long codigo) {
+        Cliente clienteEncontrado = this.clienteRepository.findById(codigo).orElse(null);
+        if (clienteEncontrado == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
         }
-        return this.clienteRepository.save(cliente);
+        return clienteEncontrado;
     }
 
-    public Cliente buscarId(Long id){
-        return this.clienteRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Cliente não encontrado"));
-    }
-
-    public Cliente atualizar(Long codigo, Cliente cliente){
-            this.clienteRepository.findById(codigo)
-                    .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                    "Cliente não encontrado"));
+    @Transactional
+    public Cliente atualizar(Long codigo, Cliente cliente) {
+        this.clienteRepository.findById(codigo).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         cliente.setCodigo(codigo);
         if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
-            cliente.getContatos().forEach(contato-> contato.setCliente(cliente));
+            cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
         }
         return this.clienteRepository.save(cliente);
-   }
-
-   @Transactional
-   public void excluir(Long codigo){
-        this.clienteRepository.findById(codigo)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Cliente não encontrado"));
-        this.clienteRepository.deleteById(codigo);
-   }
-
-    // ------------------------------------------------
-    // LÓGICA DE NEGÓCIO PARA O CONTATO
-    // ------------------------------------------------
-    @Transactional
-    public Cliente adicionarContato(Long codigoCliente, Contato contato){
-        Cliente cliente = this.clienteRepository.findById(codigoCliente)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Cliente não encontrado"));
-        cliente.adicionarContato(contato);
-        return this.clienteRepository.save(cliente);
     }
+
+    @Transactional
+    public void excluir(Long codigo) {
+        this.clienteRepository.findById(codigo).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        this.clienteRepository.deleteById(codigo);
+    }
+
+    @Transactional
+    public Cliente adicionarContato(Long codigoCliente, Contato contato) {
+        Cliente clienteEncontrado = this.clienteRepository.findById(codigoCliente).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        clienteEncontrado.adicionarContato(contato);
+        return this.clienteRepository.save(clienteEncontrado);
+    }
+
 }
