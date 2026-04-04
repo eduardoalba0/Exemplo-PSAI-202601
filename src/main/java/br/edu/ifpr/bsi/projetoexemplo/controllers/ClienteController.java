@@ -4,12 +4,16 @@ import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/clientes")
@@ -29,19 +33,32 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
     }
 
+//    // READ - Listar todos os clientes (GET)
+//    @GetMapping
+//    public ResponseEntity<List<Cliente>> listar() {
+//        List<Cliente> clientes = this.clienteService.listar();
+//        return ResponseEntity.ok(clientes);
+//    }
+
+//    // READ - Listar todos os clientes com filtro por ExampleMatcher (GET)
+//    @GetMapping
+//    public ResponseEntity<List<Cliente>> listarExampleMatcher(@ModelAttribute Cliente cliente) {
+//        List<Cliente> clientes = this.clienteService.listarExampleMatcher(cliente);
+//        return ResponseEntity.ok(clientes);
+//    }
+
     // READ - Listar todos os clientes (GET)
     @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes(Cliente cliente) {
-        List<Cliente> clientes = this.clienteService.listar(cliente);
-        return ResponseEntity.ok(clientes);
-    }
-
-    // READ - Listar todos os clientes filtrando-os pelo nome (GET)
-    // Não é recomendado criar um endpoint específico para cada tipo de filtro, o ideal é criar um endpoint genérico de listagem e usar parâmetros de consulta (query parameters) para aplicar os filtros desejados. Assim, o mesmo endpoint pode ser usado para listar todos os clientes ou para listar clientes filtrados por nome, por exemplo.
-    @GetMapping("/listar-nome")
-    public ResponseEntity<List<Cliente>> listarClientesPorNome(
-            @RequestParam String nome) {
-        List<Cliente> clientes = this.clienteService.listarPorNome(nome);
+    public ResponseEntity<Page<Cliente>> listarQuery(@RequestParam(name="nome", required = false) String nome,
+                                                     @RequestParam(name="cpf", required = false) String cpf,
+                                                     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") @RequestParam(name="dataInicioPedido", required = false) LocalDateTime dataInicioPedido,
+                                                     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") @RequestParam(name="dataFimPedido", required = false) LocalDateTime dataFimPedido,
+                                                     @PageableDefault(page=0, size=10, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Cliente> clientes = this.clienteService.listarQuery(nome,
+                cpf,
+                dataInicioPedido,
+                dataFimPedido,
+                pageable);
         return ResponseEntity.ok(clientes);
     }
 

@@ -2,18 +2,18 @@ package br.edu.ifpr.bsi.projetoexemplo.services;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
-import br.edu.ifpr.bsi.projetoexemplo.model.produto.Produto;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.awt.print.Pageable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,17 +30,37 @@ public class ClienteService {
         return this.clienteRepository.save(cliente);
     }
 
-    public List<Cliente> listar(Cliente clienteFiltro) {
-        System.out.println(clienteFiltro);
+    public List<Cliente> listar() {
+        return this.clienteRepository.findAll();
+    }
+
+    public List<Cliente> listarExampleMatcher(Cliente clienteFiltro) {
+
+        // ExampleMatcher só funciona com filtros de igualdade (WHERE = ou WHERE LIKE)
+        // Para comparações numéricas o ideal é usar outra forma de filtro, como Specification, Query
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnoreNullValues()
                 .withIgnoreCase()
                 .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("cpf", ExampleMatcher.GenericPropertyMatchers.contains());
 
+
         Example<Cliente> example = Example.of(clienteFiltro, matcher);
 
         return this.clienteRepository.findAll(example);
+    }
+
+    public Page<Cliente> listarQuery(String nome,
+                                     String cpf,
+                                     LocalDateTime dataInicioPedido,
+                                     LocalDateTime dataFimPedido,
+                                     Pageable pageable) {
+        return this.clienteRepository.findAllByQuery(
+                nome,
+                cpf,
+                dataInicioPedido,
+                dataFimPedido,
+                pageable);
     }
 
     public List<Cliente> listarPorNome(String nome) {
