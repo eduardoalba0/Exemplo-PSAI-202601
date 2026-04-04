@@ -27,7 +27,7 @@ public class ClienteController {
     // READ - Ler umm cliente específico (GET)
     @GetMapping("/{codigo}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Long codigo) {
-        Cliente cliente = clienteService.buscarId(codigo);
+        Cliente cliente = clienteService.obterPorId(codigo);
         return ResponseEntity.ok(cliente);
     }
 
