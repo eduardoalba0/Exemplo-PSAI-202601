@@ -1,5 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
+import br.edu.ifpr.bsi.projetoexemplo.enums.Role;
+import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
@@ -17,11 +19,17 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @Transactional
     public Cliente salvar(Cliente cliente) {
         if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
             cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
         }
+        Usuario usuario = usuarioService.salvar(cliente.getUsuario());
+        usuario.setRole(Role.CLIENTE);
+        cliente.setUsuario(usuario);
         return this.clienteRepository.save(cliente);
     }
 
@@ -46,6 +54,8 @@ public class ClienteService {
         this.clienteRepository.findById(codigo).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         cliente.setCodigo(codigo);
+        Usuario usuario = cliente.getUsuario();
+        cliente.setUsuario(usuarioService.atualizar(usuario.getCodigo(), usuario));
         return this.clienteRepository.save(cliente);
     }
 

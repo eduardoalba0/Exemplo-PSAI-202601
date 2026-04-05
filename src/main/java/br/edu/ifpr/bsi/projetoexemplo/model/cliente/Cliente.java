@@ -1,9 +1,11 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.cliente;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
+import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.model.endereco.Endereco;
 import br.edu.ifpr.bsi.projetoexemplo.model.pedido.Pedido;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +36,11 @@ public class Cliente extends GenericModel {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="usuario_id")
+    private Usuario usuario;
+
     // Um cliente pode ter vários contatos
     // MappedBy indica que o relacionamento é bidirecional e que a entidade Contato é a dona do relacionamento (ou seja, a tabela de contatos terá uma coluna cliente_id)
     // CascadeType.ALL faz com que as operações em Cliente sejam propagadas para Contato
@@ -43,6 +50,7 @@ public class Cliente extends GenericModel {
     private List<Contato> contatos = new ArrayList<>();
 
     // Um cliente pode ter vários pedidos
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos;
 
