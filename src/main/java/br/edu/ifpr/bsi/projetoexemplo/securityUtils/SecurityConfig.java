@@ -49,12 +49,12 @@ public class SecurityConfig {
 
         // Permitir acesso público
         req.requestMatchers("/error").permitAll();
-        req.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+        req.requestMatchers(HttpMethod.POST, "/auth/login", "/clientes").permitAll();
         req.requestMatchers(HttpMethod.GET, "/produtos", "/produtos/**").permitAll();
 
         // Exigir autenticação como FUNCIONARIO ou ADMIN
         req.requestMatchers(HttpMethod.GET, "/clientes", "/clientes/**", "/pedidos", "/pedidos/**").hasAnyAuthority(Role.ADMIN.name(), Role.FUNCIONARIO.name());
-        req.requestMatchers(HttpMethod.POST, "/produtos", "/clientes").hasAnyAuthority(Role.ADMIN.name(), Role.FUNCIONARIO.name());
+        req.requestMatchers(HttpMethod.POST, "/produtos").hasAnyAuthority(Role.ADMIN.name(), Role.FUNCIONARIO.name());
         req.requestMatchers(HttpMethod.PUT, "/clientes/**", "/pedidos/**", "/produtos/**").hasAnyAuthority(Role.ADMIN.name(), Role.FUNCIONARIO.name());
         req.requestMatchers(HttpMethod.PATCH, "/clientes/**", "/pedidos/**", "/produtos/**").hasAnyAuthority(Role.ADMIN.name(), Role.FUNCIONARIO.name());
 

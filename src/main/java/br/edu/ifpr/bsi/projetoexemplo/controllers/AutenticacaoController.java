@@ -1,6 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.controllers;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.LoginResponseDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.services.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,7 +19,7 @@ public class AutenticacaoController {
 
     // Rota de Login (Usa o serviço de Autenticação)
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(autenticacaoService.login(usuario));
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody UsuarioRequestDTO request) {
+        return ResponseEntity.ok(autenticacaoService.login(request));
     }
 }

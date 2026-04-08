@@ -1,6 +1,9 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.mappers.UsuarioMapper;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioDetailDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,26 +19,32 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Usuario salvar(Usuario usuario) {
-        if (usuarioRepository.findByUsername(usuario.getUsername()) != null) {
+    public UsuarioDetailDTO salvar(UsuarioRequestDTO request) {
+        if (this.usuarioRepository.findByUsername(request.username()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já existe!");
         }
-        usuario.setPassword(passwordEncoder.encode(usuario.getSenhaLocal()));
-        return usuarioRepository.save(usuario);
+        Usuario usuario = this.usuarioMapper.requestDTOToEntity(request);
+        usuario.setPassword(this.passwordEncoder.encode(request.password()));
+        return this.usuarioMapper.entityToDetailDTO(this.usuarioRepository.save(usuario));
     }
 
     @Transactional
-    public Usuario atualizar(Long codigo, Usuario usuario) {
-        Usuario existente = usuarioRepository.findById(codigo)
+    public UsuarioDetailDTO atualizar(Long codigo, UsuarioRequestDTO request) {
+        Usuario existente = this.usuarioRepository.findById(codigo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (usuario.getSenhaLocal() != null) {
-            existente.setPassword(passwordEncoder.encode(usuario.getSenhaLocal()));
+        Usuario usuario = this.usuarioMapper.requestDTOToEntity(request);
+
+        if (usuario.getPassword() != null) {
+            existente.setPassword(this.passwordEncoder.encode(request.password()));
         }
         existente.setUsername(usuario.getUsername());
-        return usuarioRepository.save(existente);
+        return this.usuarioMapper.entityToDetailDTO(this.usuarioRepository.save(usuario));
     }
 }

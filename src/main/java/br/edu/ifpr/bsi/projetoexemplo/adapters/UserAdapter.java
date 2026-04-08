@@ -1,6 +1,6 @@
 package br.edu.ifpr.bsi.projetoexemplo.adapters;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

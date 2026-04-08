@@ -1,7 +1,11 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
 import br.edu.ifpr.bsi.projetoexemplo.adapters.UserAdapter;
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.mappers.UsuarioMapper;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.LoginResponseDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioDetailDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -11,10 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
@@ -29,6 +30,8 @@ public class AutenticacaoService implements UserDetailsService {
     @Lazy
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,17 +40,15 @@ public class AutenticacaoService implements UserDetailsService {
         return new UserAdapter(usuario);
     }
 
-    public HashMap<String, Object> login(Usuario usuario) {
-        HashMap<String, Object> resposta = new HashMap<>();
-        Authentication authToken = new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getSenhaLocal());
+    public LoginResponseDTO login(UsuarioRequestDTO request) {
+        Authentication authToken = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication auth = authenticationManager.authenticate(authToken);
 
         UserAdapter adapter = (UserAdapter) auth.getPrincipal();
         String token = tokenService.gerarToken(adapter);
 
-        resposta.put("token", token);
-        resposta.put("usuario", adapter.getUsuario());
+        UsuarioDetailDTO usuario = usuarioMapper.entityToDetailDTO(adapter.getUsuario());
 
-        return resposta;
+        return new LoginResponseDTO(usuario,token);
     }
 }

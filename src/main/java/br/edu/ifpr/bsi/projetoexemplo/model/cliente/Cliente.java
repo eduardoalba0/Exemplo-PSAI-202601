@@ -1,11 +1,10 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.cliente;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.model.endereco.Endereco;
 import br.edu.ifpr.bsi.projetoexemplo.model.pedido.Pedido;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +35,6 @@ public class Cliente extends GenericModel {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="usuario_id")
     private Usuario usuario;
@@ -50,7 +48,6 @@ public class Cliente extends GenericModel {
     private List<Contato> contatos = new ArrayList<>();
 
     // Um cliente pode ter vários pedidos
-    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos;
 

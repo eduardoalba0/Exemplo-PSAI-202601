@@ -1,7 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.securityUtils;
 
 import br.edu.ifpr.bsi.projetoexemplo.adapters.UserAdapter;
-import br.edu.ifpr.bsi.projetoexemplo.model.Usuario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.UsuarioRepository;
 import br.edu.ifpr.bsi.projetoexemplo.services.TokenService;
 import jakarta.servlet.FilterChain;
