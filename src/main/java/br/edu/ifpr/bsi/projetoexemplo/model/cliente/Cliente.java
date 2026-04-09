@@ -1,6 +1,5 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.cliente;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.model.endereco.Endereco;
 import br.edu.ifpr.bsi.projetoexemplo.model.pedido.Pedido;
@@ -16,7 +15,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "tb_cliente")
-public class Cliente extends GenericModel {
+@DiscriminatorValue("CLIENTE")
+public class Cliente extends Usuario {
 
     @Column(name = "nome_cliente")
     private String nome;
@@ -34,10 +34,6 @@ public class Cliente extends GenericModel {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usuario_id")
-    private Usuario usuario;
 
     // Um cliente pode ter vários contatos
     // MappedBy indica que o relacionamento é bidirecional e que a entidade Contato é a dona do relacionamento (ou seja, a tabela de contatos terá uma coluna cliente_id)

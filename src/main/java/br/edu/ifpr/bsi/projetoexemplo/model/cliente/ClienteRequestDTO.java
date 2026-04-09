@@ -9,7 +9,8 @@ public record ClienteRequestDTO(
         String nome,
         String email,
         String cpf,
-        UsuarioRequestDTO usuario,
+        String username,
+        String password,
         List<ContatoRequestDTO> contatos
-) {
+) implements UsuarioRequestDTO {
 }

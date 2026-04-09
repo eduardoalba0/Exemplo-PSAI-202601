@@ -1,5 +1,6 @@
 package br.edu.ifpr.bsi.projetoexemplo.controllers;
 
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.LoginRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.LoginResponseDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.services.AutenticacaoService;
@@ -19,7 +20,7 @@ public class AutenticacaoController {
 
     // Rota de Login (Usa o serviço de Autenticação)
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody UsuarioRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(autenticacaoService.login(request));
     }
 }

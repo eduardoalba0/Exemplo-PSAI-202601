@@ -1,11 +1,12 @@
 package br.edu.ifpr.bsi.projetoexemplo.services;
 
 import br.edu.ifpr.bsi.projetoexemplo.adapters.UserAdapter;
+import br.edu.ifpr.bsi.projetoexemplo.mappers.ClienteMapper;
+import br.edu.ifpr.bsi.projetoexemplo.mappers.FuncionarioMapper;
 import br.edu.ifpr.bsi.projetoexemplo.mappers.UsuarioMapper;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.LoginResponseDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioDetailDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.funcionario.Funcionario;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.*;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,11 +28,11 @@ public class AutenticacaoService implements UserDetailsService {
     private TokenService tokenService;
 
     @Autowired
-    @Lazy
-    private AuthenticationManager authenticationManager;
+    private UsuarioMapper usuarioMapper;
 
     @Autowired
-    private UsuarioMapper usuarioMapper;
+    @Lazy
+    private AuthenticationManager authenticationManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,7 +41,7 @@ public class AutenticacaoService implements UserDetailsService {
         return new UserAdapter(usuario);
     }
 
-    public LoginResponseDTO login(UsuarioRequestDTO request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication auth = authenticationManager.authenticate(authToken);
 
@@ -49,6 +50,7 @@ public class AutenticacaoService implements UserDetailsService {
 
         UsuarioDetailDTO usuario = usuarioMapper.entityToDetailDTO(adapter.getUsuario());
 
-        return new LoginResponseDTO(usuario,token);
+
+        return new LoginResponseDTO(usuario, token);
     }
 }

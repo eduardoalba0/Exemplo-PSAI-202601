@@ -8,7 +8,6 @@ import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteDetailDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.ContatoRequestDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,6 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
     private ClienteMapper clienteMapper;
 
     @Autowired
@@ -44,9 +40,7 @@ public class ClienteService {
         if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
             cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
         }
-        Usuario usuario = cliente.getUsuario();
-        usuario.setRole(Role.CLIENTE);
-        usuario.setPassword(this.passwordEncoder.encode(usuario.getPassword()));
+        cliente.setPassword(this.passwordEncoder.encode(cliente.getPassword()));
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));
     }
 
@@ -79,9 +73,8 @@ public class ClienteService {
         Cliente cliente = this.clienteMapper.requestDTOToEntity(request);
         cliente.setCodigo(codigo);
 
-        Usuario usuario = cliente.getUsuario();
-        if (usuario != null && usuario.getPassword() != null) {
-            usuario.setPassword(this.passwordEncoder.encode(usuario.getPassword()));
+        if (cliente.getPassword() != null) {
+            cliente.setPassword(this.passwordEncoder.encode(cliente.getPassword()));
         }
 
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));

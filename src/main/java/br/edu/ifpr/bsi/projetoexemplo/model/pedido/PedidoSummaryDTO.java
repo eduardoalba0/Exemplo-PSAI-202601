@@ -7,7 +7,6 @@ public record PedidoSummaryDTO(
         Long codigo,
         String descricao,
         LocalDateTime data,
-        Long clienteId,
-        List<Long> produtosId
+        Long clienteId
 ) {
 }

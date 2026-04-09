@@ -1,9 +1,11 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.funcionario;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioSummaryDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioDetailDTO;
 
-public record FuncionarioDetailDTO(
+public record FuncionarioDetailDTO (
+        Long codigo,
+        String username,
         String matricula,
-        UsuarioSummaryDTO usuario
-) {
+        String role
+) implements UsuarioDetailDTO {
 }

@@ -1,17 +1,34 @@
 package br.edu.ifpr.bsi.projetoexemplo.mappers;
 
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteDetailDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteRequestDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteSummaryDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.funcionario.Funcionario;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioDetailDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioRequestDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioSummaryDTO;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {ClienteMapper.class, FuncionarioMapper.class})
-public interface UsuarioMapper {
+@Component
+public class UsuarioMapper {
 
-    Usuario requestDTOToEntity(UsuarioRequestDTO usuarioRequestDTO);
+    @Autowired
+    private ClienteMapper clienteMapper;
 
-    UsuarioDetailDTO entityToDetailDTO(Usuario usuario);
+    @Autowired
+    private FuncionarioMapper funcionarioMapper;
 
-    UsuarioSummaryDTO entityToSummaryDTO(Usuario usuario);
+    public UsuarioDetailDTO entityToDetailDTO(Usuario usuario) {
+        switch (usuario.getRole()) {
+            case CLIENTE -> {
+                return clienteMapper.entityToDetailDTO((Cliente) usuario);
+            }
+            case FUNCIONARIO -> {
+                return funcionarioMapper.entityToDetailDTO((Funcionario) usuario);
+            }
+        }
+        throw new IllegalStateException("Tipo de usuário desconhecido: " + usuario.getClass());
+    }
 }

@@ -1,8 +1,9 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.funcionario;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,12 +11,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="tb_funcionario")
-public class Funcionario extends GenericModel {
+@DiscriminatorValue("FUNCIONARIO")
+public class Funcionario extends Usuario {
 
     private String matricula;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usuario_id")
-    private Usuario usuario;
 
 }

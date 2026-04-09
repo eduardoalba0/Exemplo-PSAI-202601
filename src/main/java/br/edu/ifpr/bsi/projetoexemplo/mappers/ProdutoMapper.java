@@ -15,11 +15,5 @@ public interface ProdutoMapper {
 
     ProdutoDetailDTO entityToDetailDTO(Produto produto);
 
-    @Mapping(source="pedidosProduto", target="pedidosId")
     ProdutoSummaryDTO entityToSummaryDTO(Produto produto);
-
-    default Long toCodigo(Pedido pedido){
-        return pedido.getCodigo();
-    }
-
 }
