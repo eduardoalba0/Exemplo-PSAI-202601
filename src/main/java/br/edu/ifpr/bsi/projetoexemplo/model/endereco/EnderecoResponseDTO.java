@@ -1,6 +1,6 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.endereco;
 
-public record EnderecoSummaryDTO(
+public record EnderecoResponseDTO(
         Long codigo,
         String logradouro,
         String numero,

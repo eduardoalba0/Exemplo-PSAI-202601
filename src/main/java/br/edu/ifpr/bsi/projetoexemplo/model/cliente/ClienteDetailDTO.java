@@ -1,7 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.cliente;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.contato.ContatoSummaryDTO;
-import br.edu.ifpr.bsi.projetoexemplo.model.endereco.EnderecoSummaryDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.ContatoResponseDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.endereco.EnderecoResponseDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.pedido.PedidoSummaryDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.UsuarioSummaryDTO;
 
@@ -13,8 +13,8 @@ public record ClienteDetailDTO(
         String email,
         String cpf,
         UsuarioSummaryDTO usuario,
-        EnderecoSummaryDTO endereco,
-        List<ContatoSummaryDTO> contatos,
+        EnderecoResponseDTO endereco,
+        List<ContatoResponseDTO> contatos,
         List<PedidoSummaryDTO> pedidos
 ) {
 }
