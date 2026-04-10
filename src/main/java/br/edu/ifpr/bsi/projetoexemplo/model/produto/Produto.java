@@ -26,3 +26,13 @@ public class Produto extends GenericModel {
     @ManyToMany(mappedBy = "produtosPedido")
     private List<Pedido> pedidosProduto;
 }
+
+
+
+
+
+
+
+
+
+

@@ -14,6 +14,9 @@ import lombok.Setter;
 @Table(name = "tb_contato")
 public class Contato extends GenericModel {
 
+    @Column(name="descricao_contato")
+    private String descricao;
+
     @Column(name = "telefone_contato")
     private String telefone;
 

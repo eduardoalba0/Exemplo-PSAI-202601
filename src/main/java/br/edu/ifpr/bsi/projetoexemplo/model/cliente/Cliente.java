@@ -26,6 +26,9 @@ public class Cliente extends GenericModel {
     @Column(name = "email_cliente")
     private String email;
 
+    @Column(name = "senha_cliente")
+    private String senha;
+
     // Um cliente tem só um endereço
     // CascadeType.ALL faz com que as operações em Cliente sejam propagadas para Endereco
     // FetchType.EAGER indica que o endereço deve ser carregado imediatamente junto com o cliente
@@ -39,7 +42,7 @@ public class Cliente extends GenericModel {
     // CascadeType.ALL faz com que as operações em Cliente sejam propagadas para Contato
     // FetchType.LAZY indica que os contatos devem ser carregados somente quando forem acessados, o que pode melhorar o desempenho se o endereço não for sempre necessário
     // OrphanRemoval = true garante que, se um contato for removido da lista de contatos do cliente, ele também será removido do banco de dados
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY,  orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Contato> contatos = new ArrayList<>();
 
     // Um cliente pode ter vários pedidos
