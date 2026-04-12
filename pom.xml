@@ -10,7 +10,7 @@
     </parent>
     <groupId>br.edu.ifpr.bsi</groupId>
     <artifactId>ProjetoExemplo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
     <name>ProjetoExemplo</name>
     <description>ProjetoExemplo</description>
