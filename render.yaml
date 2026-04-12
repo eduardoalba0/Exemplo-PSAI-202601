@@ -1,6 +1,9 @@
 services:
   - type: web
     name: meu-projeto-spring
-    runtime: java
+    runtime: native
     buildCommand: ./mvnw clean install -DskipTests
     startCommand: java -jar target/*.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
