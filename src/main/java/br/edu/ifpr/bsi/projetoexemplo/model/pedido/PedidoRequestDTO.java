@@ -1,10 +1,12 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.pedido;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record PedidoRequestDTO(
         String descricao,
-        Long clienteCodigo,
-        List<Long> codigosProdutos
+        LocalDateTime data,
+        Long clienteId,
+        List<Long> produtosId
 ) {
 }

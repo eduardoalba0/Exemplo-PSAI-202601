@@ -1,7 +1,8 @@
 package br.edu.ifpr.bsi.projetoexemplo.controllers;
 
-import br.edu.ifpr.bsi.projetoexemplo.model.cliente.Cliente;
-import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteDetailDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteRequestDTO;
+import br.edu.ifpr.bsi.projetoexemplo.model.contato.ContatoRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,49 +18,66 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    // READ - Listar todos os clientes (GET)
-    @GetMapping
-    public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> clientes = this.clienteService.listar();
-        return ResponseEntity.ok(clientes);
-    }
-
-    // READ - Ler umm cliente específico (GET)
-    @GetMapping("/{codigo}")
-    public ResponseEntity<Cliente> buscarCliente(@PathVariable Long codigo) {
-        Cliente cliente = clienteService.obterPorId(codigo);
-        return ResponseEntity.ok(cliente);
-    }
+    // ==========================================================
+    // ENDPOINTS DE CLIENTE
+    // ==========================================================
 
     // CREATE - Criar um novo cliente (POST)
     @PostMapping
-    public ResponseEntity<Cliente> criar(@RequestBody Cliente request) {
-        Cliente clienteSalvo = clienteService.salvar(request);
+    public ResponseEntity<ClienteDetailDTO> criar(@RequestBody ClienteRequestDTO request) {
+        ClienteDetailDTO clienteSalvo = clienteService.salvar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
     }
 
-    // UPDATE - Atualizar um cliente existente (PUT)
+    // READ - Listar todos os clientes (GET)
+    @GetMapping
+    public ResponseEntity<List<ClienteDetailDTO>> listarClientes() {
+        List<ClienteDetailDTO> clientes = this.clienteService.listar();
+        return ResponseEntity.ok(clientes);
+    }
+
+    // READ - Listar todos os clientes filtrando-os pelo nome (GET)
+    // Não é recomendado criar um endpoint específico para cada tipo de filtro, o ideal é criar um endpoint genérico de listagem e usar parâmetros de consulta (query parameters) para aplicar os filtros desejados. Assim, o mesmo endpoint pode ser usado para listar todos os clientes ou para listar clientes filtrados por nome, por exemplo.
+    @GetMapping("/listar-nome")
+    public ResponseEntity<List<ClienteDetailDTO>> listarClientesPorNome(
+            @RequestParam String nome) {
+        List<ClienteDetailDTO> clientes = this.clienteService.listarPorNome(nome);
+        return ResponseEntity.ok(clientes);
+    }
+
+    // READ - Obter um cliente pelo Codigo (GET)
+    @GetMapping("/{codigo}")
+    public ResponseEntity<ClienteDetailDTO> obterPorCodigo(@PathVariable Long codigo) {
+        ClienteDetailDTO cliente = this.clienteService.obterPorId(codigo);
+        return ResponseEntity.ok(cliente);
+    }
+
+    // UPDATE - Atualizar um cliente existente pelo Codigo (PUT - atualização completa)
     @PutMapping("/{codigo}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long codigo, @RequestBody Cliente request){
-        Cliente clienteAtualizado = clienteService.atualizar(codigo, request);
+    public ResponseEntity<ClienteDetailDTO> atualizar(@PathVariable Long codigo, @RequestBody ClienteRequestDTO request) {
+        ClienteDetailDTO clienteAtualizado = clienteService.atualizar(codigo, request);
         return ResponseEntity.ok(clienteAtualizado);
     }
 
     // DELETE - Excluir um cliente pelo Codigo (DELETE)
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long codigo){
+    public void excluir(@PathVariable Long codigo) {
         clienteService.excluir(codigo);
     }
 
-    // ------------------------------------------------
-    // ENDPOINTS DO CONTATO
-    // ------------------------------------------------
-    @PostMapping("/{codigo}/contatos")
-    public ResponseEntity<Cliente> adicionarContato(@PathVariable Long codigo,
-                                                    @RequestBody Contato contato){
-        Cliente cliente = clienteService.adicionarContato(codigo, contato);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
+    // ==========================================================
+    // ENDPOINTS DO CONTATO DO CLIENTE
+    // ==========================================================
+
+    // CREATE - Criar um novo contato para um cliente específico (POST)
+    @PostMapping("/{codigoCliente}/contatos")
+    public ResponseEntity<ClienteDetailDTO> adicionarContato(@PathVariable Long codigoCliente, @RequestBody ContatoRequestDTO request) {
+        ClienteDetailDTO cliente = clienteService.adicionarContato(codigoCliente, request);
+        return ResponseEntity.ok(cliente);
     }
 
+    /**
+     * TODO - Implementar restante dos endpoints de contato, se necessário.
+     */
 }

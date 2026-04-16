@@ -6,9 +6,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_produtos")
 public class Produto extends GenericModel {
@@ -26,13 +30,3 @@ public class Produto extends GenericModel {
     @ManyToMany(mappedBy = "produtosPedido")
     private List<Pedido> pedidosProduto;
 }
-
-
-
-
-
-
-
-
-
-

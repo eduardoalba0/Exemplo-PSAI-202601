@@ -6,7 +6,6 @@ import br.edu.ifpr.bsi.projetoexemplo.model.produto.Produto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CurrentTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ public class Pedido extends GenericModel {
     // Anotação para indicar que o campo deve ser preenchido automaticamente com a data de criação do registro
     @CreatedDate
     @Column(name = "data_pedido")
-    @CurrentTimestamp
     private LocalDateTime dataPedido;
 
     @Column(name = "descricao_pedido")

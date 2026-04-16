@@ -1,8 +1,6 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.produto;
 
-
-public record ProdutoSummaryDTO(
-        Long codigo,
+public record ProdutoRequestDTO(
         String nome,
         String descricao,
         Double preco

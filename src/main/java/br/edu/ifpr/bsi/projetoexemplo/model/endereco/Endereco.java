@@ -1,7 +1,9 @@
 package br.edu.ifpr.bsi.projetoexemplo.model.endereco;
 
 import br.edu.ifpr.bsi.projetoexemplo.model.GenericModel;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
