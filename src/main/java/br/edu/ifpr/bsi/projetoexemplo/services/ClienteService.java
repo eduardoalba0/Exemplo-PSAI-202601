@@ -8,16 +8,21 @@ import br.edu.ifpr.bsi.projetoexemplo.model.cliente.ClienteRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.Contato;
 import br.edu.ifpr.bsi.projetoexemplo.model.contato.ContatoRequestDTO;
 import br.edu.ifpr.bsi.projetoexemplo.repositories.ClienteRepository;
+import br.edu.ifpr.bsi.projetoexemplo.utils.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 public class ClienteService {
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -30,11 +35,17 @@ public class ClienteService {
 
 
     @Transactional
-    public ClienteDetailDTO salvar(ClienteRequestDTO request) {
+    public ClienteDetailDTO salvar(ClienteRequestDTO request, MultipartFile imagem) {
         Cliente cliente = this.clienteMapper.requestDTOToEntity(request);
         if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
             cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
         }
+
+        if (imagem != null) {
+            String urlImagem = cloudinaryService.uploadImagem(imagem);
+            cliente.setUrlImagem(urlImagem);
+        }
+
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));
     }
 
@@ -61,11 +72,15 @@ public class ClienteService {
     }
 
     @Transactional
-    public ClienteDetailDTO atualizar(Long codigo, ClienteRequestDTO request) {
+    public ClienteDetailDTO atualizar(Long codigo, ClienteRequestDTO request, MultipartFile imagem) {
         this.clienteRepository.findById(codigo).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
         Cliente cliente = this.clienteMapper.requestDTOToEntity(request);
         cliente.setCodigo(codigo);
+        if (imagem != null) {
+            String urlImagem = cloudinaryService.uploadImagem(imagem);
+            cliente.setUrlImagem(urlImagem);
+        }
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));
     }
 

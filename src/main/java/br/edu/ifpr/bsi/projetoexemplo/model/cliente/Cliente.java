@@ -29,6 +29,9 @@ public class Cliente extends GenericModel {
     @Column(name = "senha_cliente")
     private String senha;
 
+    @Column(name= "url_imagem")
+    private String urlImagem;
+
     // Um cliente tem só um endereço
     // CascadeType.ALL faz com que as operações em Cliente sejam propagadas para Endereco
     // FetchType.EAGER indica que o endereço deve ser carregado imediatamente junto com o cliente

@@ -12,6 +12,7 @@ public record ClienteSummaryDTO(
         String nome,
         String cpf,
         String email,
+        String urlImagem,
         EnderecoRequestDTO endereco
 //        List<ContatoResponseDTO> contatos,
 ) {
