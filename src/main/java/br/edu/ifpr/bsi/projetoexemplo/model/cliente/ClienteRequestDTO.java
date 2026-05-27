@@ -12,6 +12,7 @@ public record ClienteRequestDTO(
         String cpf,
         String email,
         String senha,
+        String urlImagem,
         // Colocamos o DTO de Request de endereço e contato
         // pois vamos inserir todos juntos
         EnderecoRequestDTO endereco,

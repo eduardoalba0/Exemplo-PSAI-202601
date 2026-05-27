@@ -25,12 +25,9 @@ public class ClienteController {
     // ==========================================================
 
     // CREATE - Criar um novo cliente (POST)
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ClienteDetailDTO> criar(
-            @RequestPart("dados") ClienteRequestDTO request,
-            @RequestPart("imagem") MultipartFile imagem
-    ) {
-        ClienteDetailDTO clienteSalvo = clienteService.salvar(request, imagem);
+    @PostMapping
+    public ResponseEntity<ClienteDetailDTO> criar(@RequestBody ClienteRequestDTO request) {
+        ClienteDetailDTO clienteSalvo = clienteService.salvar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
     }
 
@@ -58,10 +55,11 @@ public class ClienteController {
     }
 
     // UPDATE - Atualizar um cliente existente pelo Codigo (PUT - atualização completa)
-    @PutMapping("/{codigo}")
+    @PutMapping(value = "/{codigo}", consumes = "multipart/form-data")
     public ResponseEntity<ClienteDetailDTO> atualizar(@PathVariable Long codigo,
                                                       @RequestPart("dados") ClienteRequestDTO request,
-                                                      @RequestPart("imagem") MultipartFile imagem) {
+                                                      @RequestPart(value = "imagem", required = false) MultipartFile imagem
+    ) {
         ClienteDetailDTO clienteAtualizado = clienteService.atualizar(codigo, request, imagem);
         return ResponseEntity.ok(clienteAtualizado);
     }

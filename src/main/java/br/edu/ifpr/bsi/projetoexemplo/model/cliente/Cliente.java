@@ -20,7 +20,7 @@ public class Cliente extends GenericModel {
     @Column(name = "nome_cliente")
     private String nome;
 
-    @Column(name = "cpf_cliente")
+    @Column(name = "cpf_cliente", unique = true)
     private String cpf;
 
     @Column(name = "email_cliente")

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ClienteService {
@@ -35,15 +36,10 @@ public class ClienteService {
 
 
     @Transactional
-    public ClienteDetailDTO salvar(ClienteRequestDTO request, MultipartFile imagem) {
+    public ClienteDetailDTO salvar(ClienteRequestDTO request) {
         Cliente cliente = this.clienteMapper.requestDTOToEntity(request);
         if (cliente.getContatos() != null && !cliente.getContatos().isEmpty()) {
             cliente.getContatos().forEach(contato -> contato.setCliente(cliente));
-        }
-
-        if (imagem != null) {
-            String urlImagem = cloudinaryService.uploadImagem(imagem);
-            cliente.setUrlImagem(urlImagem);
         }
 
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));
@@ -78,16 +74,24 @@ public class ClienteService {
         Cliente cliente = this.clienteMapper.requestDTOToEntity(request);
         cliente.setCodigo(codigo);
         if (imagem != null) {
-            String urlImagem = cloudinaryService.uploadImagem(imagem);
+            String urlImagem = cloudinaryService.uploadImagem(
+                    "clientes",
+                    imagem,
+                    "imagem_do_cliente_" + codigo);
             cliente.setUrlImagem(urlImagem);
         }
+
         return this.clienteMapper.entityToDetailDTO(this.clienteRepository.save(cliente));
     }
 
     @Transactional
     public void excluir(Long codigo) {
-        this.clienteRepository.findById(codigo).orElseThrow(() ->
+        Cliente cliente = this.clienteRepository.findById(codigo).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        if (cliente.getUrlImagem() != null)
+            cloudinaryService.deletarImagem("clientes", cliente.getUrlImagem());
+
         this.clienteRepository.deleteById(codigo);
     }
 
