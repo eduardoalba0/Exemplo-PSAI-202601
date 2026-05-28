@@ -10,7 +10,6 @@ public record PedidoDetailDTO(
         Long codigo,
         String descricao,
         LocalDateTime data,
-        ClienteSummaryDTO usuario,
         List<ProdutoSummaryDTO> produtosPedido
 ) {
 }
