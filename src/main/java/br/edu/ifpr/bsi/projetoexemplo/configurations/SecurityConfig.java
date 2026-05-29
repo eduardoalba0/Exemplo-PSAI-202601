@@ -1,7 +1,7 @@
 package br.edu.ifpr.bsi.projetoexemplo.configurations;
 
 import br.edu.ifpr.bsi.projetoexemplo.enums.Role;
-import br.edu.ifpr.bsi.projetoexemplo.securityUtils.JwtAuthenticationFilter;
+import br.edu.ifpr.bsi.projetoexemplo.components.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

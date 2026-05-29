@@ -1,4 +1,4 @@
-package br.edu.ifpr.bsi.projetoexemplo.securityUtils;
+package br.edu.ifpr.bsi.projetoexemplo.components;
 
 import br.edu.ifpr.bsi.projetoexemplo.adapters.UserAdapter;
 import br.edu.ifpr.bsi.projetoexemplo.model.usuario.Usuario;
