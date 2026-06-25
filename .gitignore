@@ -35,3 +35,4 @@ build/
 
 ### Generated files #
 application.properties
+/src/main/resources/application-local.properties
