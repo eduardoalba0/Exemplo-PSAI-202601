@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-
-### Generated files #
-application.properties
