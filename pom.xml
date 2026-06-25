@@ -11,7 +11,7 @@
     <groupId>br.edu.ifpr.bsi</groupId>
     <artifactId>ProjetoExemplo</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>ProjetoExemplo</name>
     <description>ProjetoExemplo</description>
     <url/>
